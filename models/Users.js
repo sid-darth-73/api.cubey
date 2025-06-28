@@ -1,6 +1,6 @@
-import mongoose, { Mongoose } from "mongoose";
-
-const userSchema = new mongoose.schema({
+import mongoose, { Mongoose, model, Schema } from "mongoose";
+import { nanoid } from "nanoid";
+const userSchema = Schema({
     wcaIdOrEmail: {
     type: String,
     required: true,
@@ -22,4 +22,4 @@ const userSchema = new mongoose.schema({
     }
 })
 
-export default Mongoose.model('Users', userSchema);
+export const UserModel = model('Users', userSchema);

@@ -1,6 +1,6 @@
-import mongoose, { Mongoose } from "mongoose";
+import mongoose, { Mongoose, model, Schema } from "mongoose";
 
-const averageSchema = new mongoose.Schema({
+const averageSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -25,4 +25,4 @@ const averageSchema = new mongoose.Schema({
     }
 })
 
-export default Mongoose.model('Averages', averageSchema);
+export const AverageModel = model('Averages', averageSchema);

@@ -1,6 +1,6 @@
-import mongoose, { Mongoose } from 'mongoose'
+import mongoose, { Mongoose, model, Schema } from "mongoose";
 
-const solveSchema = new mongoose.Schema({
+const solveSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -29,4 +29,4 @@ const solveSchema = new mongoose.Schema({
     }
 })
 
-export default Mongoose.model('Solves', solveSchema)
+export const SolveModel = model('Solves', solveSchema)
