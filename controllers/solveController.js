@@ -3,19 +3,36 @@ import { SolveModel } from '../models/Solves.js';
 export const addSolve = async (req, res) => {
   try {
     const { scramble, timeInSeconds, type } = req.body;
+    const userId = req.user.userId;
+
+    const currentPB = await SolveModel
+      .findOne({ userId, type })
+      .sort({ timeInSeconds: 1 });
+
+    const isPB = !currentPB || timeInSeconds < currentPB.timeInSeconds;
+
+    if (isPB && currentPB) {
+      await SolveModel.updateOne(
+        { _id: currentPB._id },
+        { $set: { isPB: false } }
+      );
+    }
 
     const solve = await SolveModel.create({
-      userId: req.user.userId,
+      userId,
       scramble,
       timeInSeconds,
-      type
+      type,
+      isPB,
     });
 
     res.status(201).json(solve);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to add solve' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to add solve', errorDesc: err.message });
   }
 };
+
 
 export const getSolves = async (req, res) => {
   try {
