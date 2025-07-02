@@ -1,4 +1,4 @@
-import mongoose, { Mongoose, model, Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const averageSchema = new Schema({
     userId: {
