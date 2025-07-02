@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
+
+
 router.post('/', addAverage);
 router.get('/', getAverages);
 

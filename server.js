@@ -7,6 +7,8 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import solveRoutes from './routes/solveRoutes.js';
 import averageRoutes from './routes/averageRoutes.js';
+import learnRoutes from './routes/learnRoutes.js'
+
 
 const app = express();
 app.use(cors());
@@ -20,6 +22,8 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/auth', authRoutes);
 app.use('/solves', solveRoutes);
 app.use('/averages', averageRoutes);
+app.use('/learn', learnRoutes);
+
 
 const PORT = process.env.PORT || 3002;
 
