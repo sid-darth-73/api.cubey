@@ -16,7 +16,8 @@ const algoTimeSchema = new Schema({
   },
   type: {
     type: String,
-    required: true,
+    required: false, // debugging this,
+    default: '3x3',
     enum: ['3x3', '4x4', '5x5'],
   },
   updatedAt: {

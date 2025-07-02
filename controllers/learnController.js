@@ -1,10 +1,10 @@
 import { AlgoTimeModel } from "../models/AlgoTimeModel.js";
 
 export const updateBestTime = async (req, res)=>{
-  const { algoId, bestTimeInSeconds, type } = req.body;
+  const { algoId, bestTimeInSeconds } = req.body; // removed ,type for now
 
-  if(!algoId || !bestTimeInSeconds || !type) {
-    return res.status(400).json({ message: "Missing fields" });
+  if (!algoId || bestTimeInSeconds === undefined || typeof bestTimeInSeconds !== 'number' || bestTimeInSeconds <= 0) {
+    return res.status(400).json({ message: "Invalid or missing fields" });
   }
   try {
     const existing = await AlgoTimeModel.findOne({
@@ -14,8 +14,7 @@ export const updateBestTime = async (req, res)=>{
       const newEntry = await AlgoTimeModel.create({
         userId: req.user.userId,
         algoId,
-        bestTimeInSeconds,
-        type,
+        bestTimeInSeconds, // removed ,type for now
       });
       return res.status(201).json(newEntry);
     }
