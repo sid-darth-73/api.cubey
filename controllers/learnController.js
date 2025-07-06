@@ -61,3 +61,22 @@ export const getBestTimeForAlgo = async (req, res)=>{
   }
 };
 
+export const resetBestTime = async (req, res) => {
+  try {
+    const { algoId } = req.params;
+    if(!algoId) {
+      return res.status(400).json({ message: "Missing algorithm ID" });
+    }
+    const deleted = await AlgoTimeModel.deleteOne({
+      userId: req.user.userId,
+      algoId,
+    });
+    if(deleted.deletedCount === 0) {
+      return res.status(404).json({ message: "No best time found to reset" });
+    }
+    res.json({ message: "Best time reset successfully" });
+  } catch (err) {
+    console.error("Failed to reset best time:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
