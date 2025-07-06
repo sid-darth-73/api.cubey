@@ -46,9 +46,36 @@ export const getSolves = async (req, res) => {
 export const deleteSolve = async (req, res) => {
   try {
     const { id } = req.params;
-    await SolveModel.deleteOne({ _id: id, userId: req.user.userId });
+    const userId = req.user.userId;
+
+    const solveToDelete = await SolveModel.findOne({ _id: id, userId });
+
+    if(!solveToDelete) {
+      return res.status(404).json({ error: 'Solve not found' });
+    }
+
+    const { type, isPB } = solveToDelete;
+
+    await SolveModel.deleteOne({ _id: id, userId });
+
+    // reassign the pb if this was PB
+    if(isPB) {
+      const nextBest = await SolveModel
+        .findOne({ userId, type })
+        .sort({ timeInSeconds: 1 });
+
+      if(nextBest) {
+        await SolveModel.updateOne(
+          { _id: nextBest._id },
+          { $set: { isPB: true } }
+        );
+      }
+    }
+
     res.json({ message: 'Solve deleted' });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to delete solve' });
   }
 };
+
