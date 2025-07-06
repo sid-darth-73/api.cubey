@@ -8,7 +8,7 @@ import authRoutes from './routes/authRoutes.js';
 import solveRoutes from './routes/solveRoutes.js';
 import averageRoutes from './routes/averageRoutes.js';
 import learnRoutes from './routes/learnRoutes.js'
-
+import pbRoutes from './routes/pbRoutes.js'
 
 const app = express();
 app.use(cors());
@@ -23,7 +23,7 @@ app.use('/auth', authRoutes);
 app.use('/solves', solveRoutes);
 app.use('/averages', averageRoutes);
 app.use('/learn', learnRoutes);
-
+app.use('/pb', pbRoutes)
 
 const PORT = process.env.PORT || 3002;
 
