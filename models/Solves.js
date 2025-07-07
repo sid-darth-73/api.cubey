@@ -17,7 +17,7 @@ const solveSchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: ['2x2', '3x3', '4x4', '5x5', 'OH', 'Pyraminx', 'Skewb', 'BLD', 'Other']
+        enum: ['2x2', '3x3', '4x4', '5x5','6x6','7x7','OH', 'Pyraminx', 'Skewb', 'BLD', 'Other']
     },
     isPB: {
         type: Boolean,
