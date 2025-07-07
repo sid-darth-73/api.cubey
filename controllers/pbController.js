@@ -6,16 +6,16 @@ import { AverageModel } from '../models/Averages.js';
 export const getPbs = async (req, res) => {
   const { shareLink } = req.params;
   try {
-    console.log("Incoming shareLink:", shareLink);
+    //console.log("Incoming shareLink:", shareLink);
 
     const user = await UserModel.findOne({ shareLink });
     if(!user) {
-      console.log("No user found for shareLink");
+      //console.log("No user found for shareLink");
       return res.status(404).json({ message: "User not found" });
     }
 
     const userId = user._id;
-    console.log("Found userId:", userId);
+    //console.log("Found userId:", userId);
 
     const solves = await SolveModel.find({ userId: userId, isPB: true });
     const averages = await AverageModel.find({ userId: userId, isPB: true });

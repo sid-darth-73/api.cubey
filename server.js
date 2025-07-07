@@ -3,6 +3,7 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 import authRoutes from './routes/authRoutes.js';
 import solveRoutes from './routes/solveRoutes.js';
@@ -10,7 +11,21 @@ import averageRoutes from './routes/averageRoutes.js';
 import learnRoutes from './routes/learnRoutes.js'
 import pbRoutes from './routes/pbRoutes.js'
 
+const apiLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, 
+  max: 100,    
+  standardHeaders: true, 
+  legacyHeaders: false, 
+  message: {
+    status: 429,
+    error: 'Too many requests. Please try again later.'
+  }
+});
+
 const app = express();
+
+app.use(apiLimiter);
+
 app.use(cors());
 app.use(express.json());
 
