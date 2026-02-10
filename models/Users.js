@@ -1,10 +1,16 @@
 import mongoose, { Mongoose, model, Schema } from "mongoose";
 import { nanoid } from "nanoid";
 const userSchema = Schema({
-    wcaIdOrEmail: {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true
+    },
+    wcaId: {
     type: String,
-    required: true,
-    unique: true,
+    required: false,
+    unique: false,
     trim: true
     },
     passwordHash: {

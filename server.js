@@ -10,6 +10,7 @@ import solveRoutes from './routes/solveRoutes.js';
 import averageRoutes from './routes/averageRoutes.js';
 import learnRoutes from './routes/learnRoutes.js'
 import pbRoutes from './routes/pbRoutes.js'
+import resetRoutes from './routes/resetRoutes.js'
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, 
@@ -39,6 +40,8 @@ app.use('/solves', solveRoutes);
 app.use('/averages', averageRoutes);
 app.use('/learn', learnRoutes);
 app.use('/pb', pbRoutes)
+
+app.use('/reset', resetRoutes)
 
 const PORT = process.env.PORT || 3002;
 
