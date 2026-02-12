@@ -41,7 +41,7 @@ app.use('/averages', averageRoutes);
 app.use('/learn', learnRoutes);
 app.use('/pb', pbRoutes)
 
-app.use('/reset', resetRoutes)
+app.use('/auth/reset', resetRoutes)
 
 const PORT = process.env.PORT || 3002;
 
