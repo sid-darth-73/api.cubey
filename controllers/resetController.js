@@ -19,7 +19,7 @@ async function sendOtp(email, otp) {
 
   } catch (error) {
     console.error('Error sending email:', error);
-  }
+    }
 }
 export const resetController = async (req, res)=>{
     const {email} = req.body;
@@ -29,7 +29,7 @@ export const resetController = async (req, res)=>{
     if(!user){
         // cant tell the correctness of email, hence sending false response
         return res.status(200).json({
-            message: "If provided email is correct, check the inbox"
+            message: "If provided email is correct, check the inbox --"
         })
     }
     const existingOtpRequest = await ResetPasswordModel.findOne({email});
