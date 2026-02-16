@@ -27,6 +27,7 @@ export const resetController = async (req, res)=>{
         email
     });
     if(!user){
+        // cant tell the correctness of email, hence sending false response
         return res.status(200).json({
             message: "If provided email is correct, check the inbox"
         })
@@ -37,18 +38,18 @@ export const resetController = async (req, res)=>{
             message: "OTP already sent"
         })
     }
-    const otp = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000).toString();
-
-    await ResetPasswordModel.create({ email, otp});
-
+    const sent_otp = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000).toString();
+    
     try{
-        await sendOtp(email, otp);
+        await sendOtp(email, sent_otp);
     } catch (error) {
         return res.status(500).json({
             message: "Error sending Email",
             errorMessage: error
         })
     }
+    const otp = await bcrypt.hash(sent_otp,10);
+    await ResetPasswordModel.create({ email, otp});
 
     return res.status(200).json({
         message: "If provided email is correct, check the inbox"
@@ -63,17 +64,25 @@ export const verificationController = async (req, res)=>{
             message: "Invalid mail"
         })
     }
-    const existingOtp = await ResetPasswordModel.findOne({email});
-    if(!existingOtp || existingOtp.otp !== otp) {
+    const existingOtpObject = await ResetPasswordModel.findOne({email});
+    if(!existingOtpObject) {
         return res.status(401).json({
             message: "Invalild/Expired OTP, please try again"
         })
     }
-    // otp is valid, now mnake a token and send back the token in response
-    const resetToken = jwt.sign({email: email}, 
+    const isOtpValid = await bcrypt.compare(otp, existingOtpObject.otp);
+    if(!isOtpValid) {
+        return res.status(401).json({
+            message: "Invalild/Expired OTP, please try again"
+        })
+    }
+    // otp is valid, now make a token and send back the token in response
+
+    const resetToken = jwt.sign({email: email, purpose: 'reset-password'}, 
         process.env.JWT_SECRET,
         {expiresIn: '5m'}
     );
+    await existingOtpObject.deleteOne();
     res.status(200).json({
         resetToken: resetToken,
     })
@@ -82,7 +91,14 @@ export const verificationController = async (req, res)=>{
 
 export const passwordChangeController = async (req, res)=>{
     const {newPassword,resetToken}=req.body;
-    const decoded = jwt.verify(resetToken,process.env.JWT_SECRET);
+    let decoded='';
+    try {
+        decoded = jwt.verify(resetToken,process.env.JWT_SECRET);
+    }catch (error) {
+        return res.status(401).json({
+            message: "Invalid reset token"
+        })
+    }
     const emailInToken = decoded.email;
     //console.log(emailInToken)
     const user = await UserModel.findOne({email: emailInToken})
