@@ -16,5 +16,5 @@ const resetPasswordSchema = new Schema({
   }
 });
 
-export const ResetPasswordModel = model('ResetPassoword', resetPasswordSchema)
+export const ResetPasswordModel = model('ResetPassword', resetPasswordSchema);
 
