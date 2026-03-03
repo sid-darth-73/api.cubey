@@ -85,7 +85,9 @@ app.get('/dashboard', (req, res) => {
         res.redirect('/auth/google');
     }
 });
-
+app.get('/', (req, res)=>{
+  res.send('server healthy')
+})
 const PORT = process.env.PORT || 3002;
 
 app.listen(PORT, () => {
