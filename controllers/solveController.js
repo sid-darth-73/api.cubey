@@ -113,13 +113,13 @@ export const addBatchSolves = async (req, res) => {
     
     // We process sequentially to correctly calculate PB
     for (const solve of solves) {
-      const { scramble, timeInSeconds, type, sessionNumber, comment } = solve;
+      const { scramble, timeInSeconds, type, sessionNumber, comment, penalty } = solve;
 
       const currentPB = await SolveModel
-        .findOne({ userId, type })
+        .findOne({ userId, type, penalty: { $ne: 'DNF' } })
         .sort({ timeInSeconds: 1 });
 
-      const isPB = !currentPB || timeInSeconds < currentPB.timeInSeconds;
+      const isPB = (!currentPB || timeInSeconds < currentPB.timeInSeconds) && penalty !== 'DNF';
 
       if (isPB && currentPB) {
         await SolveModel.updateOne(
