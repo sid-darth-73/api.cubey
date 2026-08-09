@@ -21,7 +21,8 @@ export const getPbs = async (req, res) => {
     const averages = await AverageModel.find({ userId: userId, isPB: true });
 
     res.json({
-      username: user.wcaIdOrEmail,
+      userId: user._id,
+      username: user.wcaId || user.email,
       shareLink,
       pbSolves: solves,
       averages

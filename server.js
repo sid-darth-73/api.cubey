@@ -1,3 +1,4 @@
+import { createServer } from 'http';
 import dotenv from 'dotenv';
 import passport from 'passport';
 import session from 'express-session';
@@ -15,7 +16,9 @@ import averageRoutes from './routes/averageRoutes.js';
 import learnRoutes from './routes/learnRoutes.js'
 import pbRoutes from './routes/pbRoutes.js'
 import resetRoutes from './routes/resetRoutes.js'
-
+import battleRoutes from './routes/battleRoutes.js';
+import { generateScramble } from './services/scramble-generator.js';
+import { setupSocket } from './socket.js';
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, 
   max: 100,    
@@ -28,6 +31,8 @@ const apiLimiter = rateLimit({
 });
 
 const app = express();
+const httpServer = createServer(app);
+setupSocket(httpServer);
 
 app.use(apiLimiter);
 
@@ -51,8 +56,14 @@ app.use('/auth', authRoutes);
 app.use('/solves', solveRoutes);
 app.use('/averages', averageRoutes);
 app.use('/learn', learnRoutes);
-app.use('/pb', pbRoutes)
-
+app.use('/pb', pbRoutes);
+app.use('/battles', battleRoutes);
+app.get('/scrambles/generate', (req, res)=>{
+  const scramble = generateScramble();
+  res.json({
+    'scramble': scramble
+  })
+})
 app.use('/auth/reset', resetRoutes)
 
 
@@ -90,6 +101,6 @@ app.get('/', (req, res)=>{
 })
 const PORT = process.env.PORT || 3002;
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
